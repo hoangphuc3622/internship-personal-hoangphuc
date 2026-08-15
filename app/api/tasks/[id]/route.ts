@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getAuthUser } from "@/lib/auth";
 
 // PATCH: Cập nhật công việc theo ID (Sửa tiêu đề, trạng thái, mức độ ưu tiên...)
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return NextResponse.json({ error: "Chưa đăng nhập" }, { status: 401 });
+  }
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -22,6 +28,14 @@ export async function PATCH(
       );
     }
 
+    // Kiểm tra quyền: USER không được sửa task của người khác (ADMIN sửa được tất cả)
+    if (authUser.role !== "ADMIN" && existingTask.userId !== authUser.id) {
+      return NextResponse.json(
+        { error: "Bạn không có quyền sửa công việc này" },
+        { status: 403 }
+      );
+    }
+
     // Cập nhật các trường dữ liệu được gửi lên
     const updatedTask = await prisma.task.update({
       where: { id },
@@ -30,11 +44,15 @@ export async function PATCH(
         ...(body.description !== undefined && { description: body.description }),
         ...(body.status !== undefined && { status: body.status }),
         ...(body.priority !== undefined && { priority: body.priority }),
+        ...(body.categoryId !== undefined && { categoryId: body.categoryId }),
         ...(body.dueDate !== undefined && {
           dueDate: body.dueDate ? new Date(body.dueDate) : null,
         }),
       },
-      include: { user: true },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        category: true,
+      },
     });
 
     return NextResponse.json(updatedTask);
@@ -52,6 +70,11 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return NextResponse.json({ error: "Chưa đăng nhập" }, { status: 401 });
+  }
+
   try {
     const { id } = await params;
 
@@ -64,6 +87,14 @@ export async function DELETE(
       return NextResponse.json(
         { error: "Không tìm thấy công việc để xóa" },
         { status: 404 }
+      );
+    }
+
+    // Kiểm tra quyền: USER không được xóa task của người khác (ADMIN xóa được tất cả)
+    if (authUser.role !== "ADMIN" && existingTask.userId !== authUser.id) {
+      return NextResponse.json(
+        { error: "Bạn không có quyền xóa công việc này" },
+        { status: 403 }
       );
     }
 

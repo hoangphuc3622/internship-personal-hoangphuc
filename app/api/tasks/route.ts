@@ -1,13 +1,33 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getAuthUser } from "@/lib/auth";
 
-// GET: Lấy danh sách tasks (Sắp xếp mới nhất lên đầu, kèm thông tin user và category)
+// GET: Lấy danh sách tasks (Chỉ lấy task của user đang đăng nhập, nếu là ADMIN sẽ lấy tất cả)
 export async function GET() {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return NextResponse.json(
+      { error: "Chưa đăng nhập hoặc phiên làm việc đã hết hạn" },
+      { status: 401 }
+    );
+  }
+
   try {
+    // ADMIN xem tất cả tasks, USER chỉ xem tasks của chính mình
+    const whereClause = authUser.role === "ADMIN" ? {} : { userId: authUser.id };
+
     const tasks = await prisma.task.findMany({
-      include: { 
-        user: true,
-        category: true 
+      where: whereClause,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+        category: true,
       },
       orderBy: { createdAt: "desc" },
     });
@@ -24,6 +44,14 @@ export async function GET() {
 
 // POST: Tạo task mới
 export async function POST(request: Request) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return NextResponse.json(
+      { error: "Chưa đăng nhập hoặc phiên làm việc đã hết hạn" },
+      { status: 401 }
+    );
+  }
+
   try {
     const body = await request.json();
 
@@ -35,18 +63,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Tự động tìm hoặc tạo user mẫu nếu chưa có
-    let user = await prisma.user.findFirst();
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email: "demo@example.com",
-          name: "User Demo",
-        },
-      });
-    }
-
-    // Tạo Task mới kèm categoryId (nếu truyền lên)
+    // Tạo Task mới gắn với người dùng đang đăng nhập
     const newTask = await prisma.task.create({
       data: {
         title: body.title.trim(),
@@ -54,12 +71,19 @@ export async function POST(request: Request) {
         status: body.status || "PENDING",
         priority: body.priority || "MEDIUM",
         dueDate: body.dueDate ? new Date(body.dueDate) : null,
-        userId: user.id,
+        userId: authUser.id,
         categoryId: body.categoryId || null,
       },
-      include: { 
-        user: true,
-        category: true 
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+        category: true,
       },
     });
 
