@@ -40,7 +40,7 @@
 
     npm run dev
 
-    Mở trình duyệt và truy cập vào http://localhost:3000/login để xem kết quả.
+    Mở trình duyệt và truy cập vào http://localhost:3000/auth/login để xem kết quả.
 
 
 ---
