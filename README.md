@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ứng Dụng Quản Lý Công Việc Cá Nhân (Personal Task Management)
 
-## Getting Started
+Ứng dụng web được xây dựng nhằm hỗ trợ người dùng quản lý công việc cá nhân hiệu quả, hỗ trợ các tính năng CRUD công việc, tìm kiếm, lọc theo trạng thái/độ ưu tiên/danh mục, đăng ký, đăng nhập và phân quyền người dùng.
 
-First, run the development server:
+## 🚀 Công nghệ sử dụng
+* **Framework:** Next.js (App Router)
+* **Ngôn ngữ:** TypeScript
+* **Styling:** Tailwind CSS
+* **ORM:** Prisma
+* **Database:** PostgreSQL
+
+## ✨ Các tính năng chính
+* **Xác thực & Phân quyền:** Đăng ký tài khoản, đăng nhập an toàn và phân quyền người dùng.
+* **Quản lý công việc (Task CRUD):** Thêm mới, chỉnh sửa, thay đổi trạng thái nhanh chóng và xóa công việc.
+* **Quản lý danh mục (Categories):** Phân loại công việc theo danh mục tùy chỉnh, có kiểm tra trùng lặp danh mục.
+* **Tìm kiếm & Bộ lọc:** Tìm kiếm công việc theo tiêu đề, lọc theo trạng thái (Chờ xử lý, Đang làm, Hoàn thành), mức độ ưu tiên và danh mục.
+
+## 🛠️ Hướng dẫn cài đặt và chạy dự án
+
+1. Clone repository về máy:
+   ```bash
+   git clone [https://github.com/hoangphuc3622/internship-personal-hoangphuc.git](https://github.com/hoangphuc3622/internship-personal-hoangphuc.git)
+   cd internship-personal-hoangphuc
+
+    Cài đặt các gói phụ thuộc:
+    Bash
+
+    npm install
+    # hoặc yarn install / pnpm install
+
+    Cấu hình biến môi trường (.env) kết nối cơ sở dữ liệu PostgreSQL.
+
+    Chạy lệnh migrate cơ sở dữ liệu với Prisma:
+    Bash
+
+    npx prisma db push
+
+    Khởi động môi trường phát triển:
+    Bash
+
+    npm run dev
+
+    Mở trình duyệt và truy cập vào http://localhost:3000/login để xem kết quả.
+
+
+---
+
+### Sau khi cập nhật, bạn chạy các lệnh sau trong Terminal để đẩy lên GitHub:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git add README.md
+git commit -m "Update README.md with project documentation and details"
+git push origin main
