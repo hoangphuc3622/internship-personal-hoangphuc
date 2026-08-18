@@ -45,9 +45,4 @@
 
 ---
 
-### Sau khi cập nhật, bạn chạy các lệnh sau trong Terminal để đẩy lên GitHub:
 
-```bash
-git add README.md
-git commit -m "Update README.md with project documentation and details"
-git push origin main
