@@ -135,7 +135,7 @@ export default function LoginPage() {
 
           Chưa có tài khoản?{" "}
 
-          <Link href="/register" className="text-blue-600 hover:underline">
+          <Link href="/auth/register" className="text-blue-600 hover:underline">
 
             Tạo tài khoản
 
