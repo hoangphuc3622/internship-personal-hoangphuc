@@ -25,8 +25,8 @@ export default function RegisterPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Đăng ký thất bại");
 
-      // Đăng ký thành công -> Chuyển hướng sang trang login
-      router.push("/login");
+      // Chuyển hướng về trang đăng nhập đúng đường dẫn /auth/login
+      router.push("/auth/login");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -90,7 +90,7 @@ export default function RegisterPage() {
 
         <p className="text-sm text-center mt-4 text-gray-600">
           Đã có tài khoản?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link href="/auth/login" className="text-blue-600 hover:underline">
             Đăng nhập ngay
           </Link>
         </p>
