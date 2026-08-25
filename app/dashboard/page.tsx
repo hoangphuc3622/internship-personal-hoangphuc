@@ -65,7 +65,7 @@ export default function DashboardPage() {
       // Fetch User Me
       const meRes = await fetch("/api/auth/me");
       if (!meRes.ok) {
-        router.push("/login");
+        router.push("/auth/login"); // ĐÃ SỬA Ở ĐÂY
         return;
       }
       const meText = await meRes.text();
@@ -347,7 +347,7 @@ export default function DashboardPage() {
           <button
             onClick={async () => {
               await fetch("/api/auth/logout", { method: "POST" });
-              router.push("/login");
+              router.push("/auth/login"); // ĐÃ SỬA Ở ĐÂY
             }}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm transition"
           >

@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST() {
-  const response = NextResponse.json({ message: "Đăng xuất thành công" });
-  response.cookies.set("token", "", {
-    httpOnly: true,
-    expires: new Date(0),
-    path: "/",
-  });
-  return response;
+  const cookieStore = await cookies();
+  // Xóa cookie token tùy theo tên cookie bạn đang dùng (ví dụ: "token" hoặc "session")
+  cookieStore.delete("token"); 
+
+  return NextResponse.json({ message: "Đăng xuất thành công" });
 }
